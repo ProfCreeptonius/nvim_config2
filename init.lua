@@ -12,8 +12,8 @@ vim.opt.relativenumber = true
 vim.opt.mouse = 'a'
 vim.opt.showmode = false
 
-vim.schedule(function ()
-	vim.opt.clipboard = 'unnamedplus'
+vim.schedule(function()
+  vim.opt.clipboard = 'unnamedplus'
 end)
 
 vim.opt.breakindent = true
@@ -68,8 +68,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.pack.add({
-	'https://github.com/tpope/vim-sleuth',
-	'https://github.com/kylechui/nvim-surround'
+  'https://github.com/tpope/vim-sleuth',
+  'https://github.com/kylechui/nvim-surround'
 })
 
 
@@ -77,7 +77,7 @@ vim.pack.add({
   'https://github.com/echasnovski/mini.nvim',
 })
 
-require('mini.ai').setup {n_lines = 500}
+require('mini.ai').setup { n_lines = 500 }
 require('mini.move').setup()
 require('mini.colors').setup()
 
@@ -88,11 +88,11 @@ vim.pack.add({
 })
 
 require('telescope').setup {
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
-        },
+  extensions = {
+    ['ui-select'] = {
+      require('telescope.themes').get_dropdown(),
+    },
+  },
 
 }
 
@@ -138,23 +138,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
     if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
       local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-	buffer = event.buf,
-	group = highlight_augroup,
-	callback = vim.lsp.buf.document_highlight,
+        buffer = event.buf,
+        group = highlight_augroup,
+        callback = vim.lsp.buf.document_highlight,
       })
 
       vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-	buffer = event.buf,
-	group = highlight_augroup,
-	callback = vim.lsp.buf.clear_references,
+        buffer = event.buf,
+        group = highlight_augroup,
+        callback = vim.lsp.buf.clear_references,
       })
 
       vim.api.nvim_create_autocmd('LspDetach', {
-	group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-	callback = function(event2)
-	  vim.lsp.buf.clear_references()
-	  vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-	end,
+        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+        callback = function(event2)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+        end,
       })
     end
 
@@ -172,71 +172,71 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.pack.add({
-    'https://github.com/stevearc/conform.nvim',
+  'https://github.com/stevearc/conform.nvim',
 })
 
-require('conform').setup{
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        local lsp_format_opt
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          lsp_format_opt = 'never'
-        else
-          lsp_format_opt = 'fallback'
-        end
-        return {
-          timeout_ms = 500,
-          lsp_format = lsp_format_opt,
-        }
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
+require('conform').setup {
+  notify_on_error = false,
+  format_on_save = function(bufnr)
+    -- Disable "format_on_save lsp_fallback" for languages that don't
+    -- have a well standardized coding style. You can add additional
+    -- languages here or re-enable it for the disabled ones.
+    local disable_filetypes = { c = true, cpp = true }
+    local lsp_format_opt
+    if disable_filetypes[vim.bo[bufnr].filetype] then
+      lsp_format_opt = 'never'
+    else
+      lsp_format_opt = 'fallback'
+    end
+    return {
+      timeout_ms = 500,
+      lsp_format = lsp_format_opt,
     }
+  end,
+  formatters_by_ft = {
+    lua = { 'stylua' },
+    -- Conform can also run multiple formatters sequentially
+    -- python = { "isort", "black" },
+    --
+    -- You can use 'stop_after_first' to run the first available formatter from the list
+    -- javascript = { "prettierd", "prettier", stop_after_first = true },
+  },
+}
 
 vim.pack.add({
-    'https://github.com/stevearc/oil.nvim',
+  'https://github.com/stevearc/oil.nvim',
 })
 
 require('oil').setup {
-    columns = {
-      'permissions',
-      'size',
-      'mtime',
-      'icon',
-    },
-    view_options = {
-      show_hidden = true,
-    },
-    keymaps = {
-      ['g?'] = 'actions.show_help',
-      ['<CR>'] = 'actions.select',
-      ['<gv>'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
-      ['<gh>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
-      ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
-      ['<C-p>'] = 'actions.preview',
-      ['<C-c>'] = 'actions.close',
-      ['<gl>'] = 'actions.refresh',
-      ['-'] = 'actions.parent',
-      ['_'] = 'actions.open_cwd',
-      ['`'] = 'actions.cd',
-      ['~'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory', mode = 'n' },
-      ['gs'] = 'actions.change_sort',
-      ['gx'] = 'actions.open_external',
-      ['g.'] = 'actions.toggle_hidden',
-      ['g\\'] = 'actions.toggle_trash',
-    },
-    use_default_keymaps = false,
-  }
+  columns = {
+    'permissions',
+    'size',
+    'mtime',
+    'icon',
+  },
+  view_options = {
+    show_hidden = true,
+  },
+  keymaps = {
+    ['g?'] = 'actions.show_help',
+    ['<CR>'] = 'actions.select',
+    ['<gv>'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
+    ['<gh>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
+    ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
+    ['<C-p>'] = 'actions.preview',
+    ['<C-c>'] = 'actions.close',
+    ['<gl>'] = 'actions.refresh',
+    ['-'] = 'actions.parent',
+    ['_'] = 'actions.open_cwd',
+    ['`'] = 'actions.cd',
+    ['~'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory', mode = 'n' },
+    ['gs'] = 'actions.change_sort',
+    ['gx'] = 'actions.open_external',
+    ['g.'] = 'actions.toggle_hidden',
+    ['g\\'] = 'actions.toggle_trash',
+  },
+  use_default_keymaps = false,
+}
 
 
 -- Compile mode
@@ -341,273 +341,287 @@ vim.pack.add({
   'https://github.com/hiphish/rainbow-delimiters.nvim',
 })
 
-vim.api.nvim_create_autocmd({'BufWinEnter', 'CmdwinEnter'}, {
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'CmdwinEnter' }, {
   desc = "Enable treesitter automatically",
-  group = vim.api.nvim_create_augroup('maki-start-treesitter', {clear = true}),
-  callback = function() 
+  group = vim.api.nvim_create_augroup('maki-start-treesitter', { clear = true }),
+  callback = function()
     pcall(vim.treesitter.start)
   end
 })
 
 
-vim.pack.add({
-  'https://github.com/saghen/blink.lib',
-  'https://github.com/saghen/blink.cmp',
-  'https://github.com/ribru17/blink-cmp-spell',
-  'https://github.com/archie-judd/blink-cmp-words'
-})
-
-local cmp = require('blink.cmp')
-cmp.build():wait(60000)
-cmp.setup({
-  -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-  -- 'super-tab' for mappings similar to vscode (tab to accept)
-  -- 'enter' for enter to accept
-  -- 'none' for no mappings
-  --
-  -- All presets have the following mappings:
-  -- C-space: Open menu or open docs if already open
-  -- C-n/C-p or Up/Down: Select next/previous item
-  -- C-e: Hide menu
-  -- C-k: Toggle signature help (if signature.enabled = true)
-  --
-  -- See :h blink-cmp-config-keymap for defining your own keymap
-  keymap = {
-    preset = 'default',
-    ['<A-y>'] = {
-      function(cmp)
-        cmp.show { providers = { 'minuet' } }
-      end,
-    },
-    ['<C-l>'] = {
-      function(cmp)
-        cmp.snippet_forward()
-      end,
-    },
-    ['<C-S-l>'] = {
-      function(cmp)
-        cmp.snippet_backward()
-      end,
-    },
-    ['<F2>'] = { 'select_and_accept' },
-    ['<F3>'] = { 'select_next' },
-    ['<F4>'] = { 'select_prev' },
-  },
-
-  signature = {
-    enabled = true,
-  },
-
-  appearance = {
-    -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-    -- Adjusts spacing to ensure icons are aligned
-    nerd_font_variant = 'mono',
-    use_nvim_cmp_as_default = true,
-  },
-
-  -- (Default) Only show the documentation popup when manually triggered
-  completion = {
-    ghost_text = {
-      enabled = true,
-    },
-    keyword = {
-      range = 'prefix',
-    },
-    accept = {
-      auto_brackets = {
-        kind_resolution = {
-          blocked_filetypes = { 'tex' },
-        },
-        semantic_token_resolution = {
-          blocked_filetypes = { 'tex' },
-        },
-      },
-    },
-    menu = {
-      border = 'none',
-      auto_show = true,
-      draw = {
-        align_to = 'label', -- or 'none' to disable, or 'cursor' to align to the cursor
-        padding = 1,
-        gap = 1,
-        -- Use treesitter to highlight the label text
-        treesitter = { 'lsp' },
-        -- Components to render, grouped by column
-        columns = {
-          { 'label', 'label_description', gap = 1 },
-          { 'kind', gap = 1 },
-        },
-      },
-    },
-
-    documentation = {
-      auto_show = true,
-      auto_show_delay_ms = 0,
-      treesitter_highlighting = true,
-      window = {
-        border = 'padded',
-      },
-    },
-    -- documentation = { auto_show = true },
-  },
-
-  -- Default list of enabled providers defined so that you can extend it
-  -- elsewhere in your config, without redefining it, due to `opts_extend`
-  -- snippets = {
-    --   preset = 'luasnip',
-    -- },
-    sources = {
-      default = { 'lsp', 'snippets', 'buffer' },
-      providers = {
-        snippets = {
-          name = 'snippets',
-          async = true,
-          score_offset = 4,
-        },
-        lsp = {
-          name = 'lsp',
-          async = true,
-          score_offset = 5,
-        },
-        buffer = {
-          name = 'buffer',
-          async = true,
-          score_offset = -1,
-        },
-        spell = {
-          name = 'spell',
-          module = 'blink-cmp-spell',
-          opts = {},
-          async = true,
-          score_offset = -2,
-        },
-        minuet = {
-          name = 'minuet',
-          module = 'minuet.blink',
-          score_offset = 5,
-          opts = {},
-          async = true,
-        },
-      },
-    }, -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-    --
-    -- See the fuzzy documentation for more information
-    fuzzy = {
-
-      implementation = 'prefer_rust_with_warning',
-      sorts = {
-        'score',
-        function(a, b)
-          local sort = require 'blink.cmp.fuzzy.sort'
-          if a.source_id == 'spell' and b.source_id == 'spell' then
-            return sort.label(a, b)
-          end
-        end,
-        'sort_text',
-      },
-    },
-
-})
-
-
 -- vim.pack.add({
---   'https://github.com/hrsh7th/nvim-cmp',
---   'https://github.com/hrsh7th/cmp-nvim-lsp',
---   'https://github.com/hrsh7th/cmp-buffer',
---   'https://github.com/hrsh7th/cmp-path',
---   'https://github.com/hrsh7th/cmp-cmdline',
---   'https://github.com/L3MON4D3/LuaSnip'
+--   'https://github.com/saghen/blink.lib',
+--   'https://github.com/saghen/blink.cmp',
+--   'https://github.com/ribru17/blink-cmp-spell',
+--   'https://github.com/archie-judd/blink-cmp-words'
 -- })
 --
---
--- local cmp = require'cmp'
---
+-- local cmp = require('blink.cmp')
+-- cmp.build():wait(60000)
 -- cmp.setup({
---   preselect = cmp.PreselectMode.Item,
---   confirmation = {
---     completeopt = 'menu,menuone,noinsert'
+--   -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+--   -- 'super-tab' for mappings similar to vscode (tab to accept)
+--   -- 'enter' for enter to accept
+--   -- 'none' for no mappings
+--   --
+--   -- All presets have the following mappings:
+--   -- C-space: Open menu or open docs if already open
+--   -- C-n/C-p or Up/Down: Select next/previous item
+--   -- C-e: Hide menu
+--   -- C-k: Toggle signature help (if signature.enabled = true)
+--   --
+--   -- See :h blink-cmp-config-keymap for defining your own keymap
+--   keymap = {
+--     preset = 'default',
+--     ['<A-y>'] = {
+--       function(cmp)
+--         cmp.show { providers = { 'minuet' } }
+--       end,
+--     },
+--     ['<C-l>'] = {
+--       function(cmp)
+--         cmp.snippet_forward()
+--       end,
+--     },
+--     ['<C-S-l>'] = {
+--       function(cmp)
+--         cmp.snippet_backward()
+--       end,
+--     },
+--     ['<F2>'] = { 'select_and_accept' },
+--     ['<F3>'] = { 'select_next' },
+--     ['<F4>'] = { 'select_prev' },
 --   },
---   snippet = {
---     -- REQUIRED - you must specify a snippet engine
---     expand = function(args)
---       -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
---       require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
---       -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
---       -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
---       -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
 --
---       -- For `mini.snippets` users:
---       -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
---       -- insert({ body = args.body }) -- Insert at cursor
---       -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
---       -- require("cmp.config").set_onetime({ sources = {} })
---     end,
+--   signature = {
+--     enabled = true,
 --   },
---   window = {
---     -- completion = cmp.config.window.bordered(),
---     -- documentation = cmp.config.window.bordered(),
+--
+--   appearance = {
+--     -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+--     -- Adjusts spacing to ensure icons are aligned
+--     nerd_font_variant = 'mono',
+--     use_nvim_cmp_as_default = false,
 --   },
---   mapping = cmp.mapping.preset.insert({
---     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
---     ['<C-f>'] = cmp.mapping.scroll_docs(4),
---     ['<C-Space>'] = cmp.mapping.complete(),
---     ['<C-e>'] = cmp.mapping.abort(),
---     ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
---   }),
---   sources = cmp.config.sources({
---     { name = 'nvim_lsp' },
---     -- { name = 'vsnip' }, -- For vsnip users.
---     { name = 'luasnip' }, -- For luasnip users.
---     -- { name = 'ultisnips' }, -- For ultisnips users.
---     -- { name = 'snippy' }, -- For snippy users.
---   }, {
---     { name = 'buffer' },
---   })
--- })
 --
--- -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
--- -- Set configuration for specific filetype.
--- --[[ cmp.setup.filetype('gitcommit', {
---   sources = cmp.config.sources({
---     { name = 'git' },
---   }, {
---     { name = 'buffer' },
---   })
--- })
--- require("cmp_git").setup() ]]--
+--   -- (Default) Only show the documentation popup when manually triggered
+--   completion = {
+--     ghost_text = {
+--       enabled = true,
+--     },
+--     keyword = {
+--       range = 'prefix',
+--     },
+--     accept = {
+--       auto_brackets = {
+--         kind_resolution = {
+--           blocked_filetypes = { 'tex' },
+--         },
+--         semantic_token_resolution = {
+--           blocked_filetypes = { 'tex' },
+--         },
+--       },
+--     },
+--     menu = {
+--       border = 'none',
+--       auto_show = true,
+--       draw = {
+--         align_to = 'label', -- or 'none' to disable, or 'cursor' to align to the cursor
+--         padding = 1,
+--         gap = 1,
+--         -- Use treesitter to highlight the label text
+--         treesitter = { 'lsp' },
+--         -- Components to render, grouped by column
+--         columns = {
+--           { 'label', 'label_description', gap = 1 },
+--           { 'kind', gap = 1 },
+--         },
+--       },
+--     },
 --
--- -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
--- cmp.setup.cmdline({ '/', '?' }, {
---   mapping = cmp.mapping.preset.cmdline(),
---   sources = {
---     { name = 'buffer' }
---   }
--- })
+--     documentation = {
+--       auto_show = true,
+--       auto_show_delay_ms = 0,
+--       treesitter_highlighting = true,
+--       window = {
+--         border = 'padded',
+--       },
+--     },
+--     -- documentation = { auto_show = true },
+--   },
 --
--- -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
--- cmp.setup.cmdline(':', {
---   mapping = cmp.mapping.preset.cmdline(),
---   sources = cmp.config.sources({
---     { name = 'path' }
---   }, {
---     { name = 'cmdline' }
---   }),
---   matching = { disallow_symbol_nonprefix_matching = false }
--- })
+--   -- Default list of enabled providers defined so that you can extend it
+--   -- elsewhere in your config, without redefining it, due to `opts_extend`
+--   -- snippets = {
+--     --   preset = 'luasnip',
+--     -- },
+--     sources = {
+--       default = { 'lsp', 'snippets', 'buffer' },
+--       providers = {
+--         snippets = {
+--           name = 'snippets',
+--           async = true,
+--           score_offset = 4,
+--         },
+--         lsp = {
+--           name = 'lsp',
+--           async = true,
+--           score_offset = 5,
+--         },
+--         buffer = {
+--           name = 'buffer',
+--           async = true,
+--           score_offset = -1,
+--         },
+--         spell = {
+--           name = 'spell',
+--           module = 'blink-cmp-spell',
+--           opts = {},
+--           async = true,
+--           score_offset = -2,
+--         },
+--         minuet = {
+--           name = 'minuet',
+--           module = 'minuet.blink',
+--           score_offset = 5,
+--           opts = {},
+--           async = true,
+--         },
+--       },
+--     }, -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+--     -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+--     -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+--     --
+--     -- See the fuzzy documentation for more information
+--     fuzzy = {
 --
+--       implementation = 'prefer_rust_with_warning',
+--       sorts = {
+--         'score',
+--         function(a, b)
+--           local sort = require 'blink.cmp.fuzzy.sort'
+--           if a.source_id == 'spell' and b.source_id == 'spell' then
+--             return sort.label(a, b)
+--           end
+--         end,
+--         'sort_text',
+--       },
+--     },
+--
+-- })
 --
 
+vim.pack.add({
+  'https://github.com/hrsh7th/nvim-cmp',
+  'https://github.com/hrsh7th/cmp-nvim-lsp',
+  'https://github.com/hrsh7th/cmp-buffer',
+  'https://github.com/hrsh7th/cmp-path',
+  'https://github.com/hrsh7th/cmp-cmdline',
+  'https://github.com/L3MON4D3/LuaSnip'
+})
+
+
+local cmp = require 'cmp'
+
+vim.opt.completeopt = { "menu", "menuone", "noinsert" }
+
+cmp.setup({
+  preselect = cmp.PreselectMode.Item,
+  completion = {
+    completeopt = 'menu,menuone,noinsert'
+  },
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+      -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+
+      -- For `mini.snippets` users:
+      -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+      -- insert({ body = args.body }) -- Insert at cursor
+      -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
+      -- require("cmp.config").set_onetime({ sources = {} })
+    end,
+  },
+  window = {
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
+  },
+  -- completion = {
+  --   autocomplete = false,
+  -- },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-n>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        cmp.complete()
+        vim.wait(500, function()
+          return cmp.visible()
+        end)
+        cmp.select_next_item()
+      end
+    end,
+    ['<C-j>'] = cmp.mapping.select_next_item(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    -- { name = 'vsnip' }, -- For vsnip users.
+    { name = 'luasnip' }, -- For luasnip users.
+    -- { name = 'ultisnips' }, -- For ultisnips users.
+    -- { name = 'snippy' }, -- For snippy users.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+-- Set configuration for specific filetype.
+--[[ cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'git' },
+  }, {
+    { name = 'buffer' },
+  })
+})
+require("cmp_git").setup() ]] --
+
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  }),
+  matching = { disallow_symbol_nonprefix_matching = false }
+})
 
 -- vim.cmd "set completeopt=menuone,noselect,fuzzy,nosort"
--- vim.cmd "set completeopt=menuone,fuzzy"
+-- vim.cmd "set completeopt=menuone,fuzzy,noinsert"
+
 
 require('lsps')
 require('themes')
 
 vim.pack.add({ -- Add indentation guides even on blank lines
-    'https://github.com/lukas-reineke/indent-blankline.nvim',
+  'https://github.com/lukas-reineke/indent-blankline.nvim',
 })
 
 local highlight = {
@@ -642,12 +656,204 @@ vim.pack.add({
 vim.g.vimtex_view_method = "zathura"
 
 vim.pack.add({
-  'https://github.com/jake-stewart/multicursor.nvim'
+  'https://github.com/jake-stewart/multicursor.nvim',
+  'https://github.com/folke/trouble.nvim',
 })
+
+require('trouble').setup {
+  auto_close = false,      -- auto close when there are no items
+  auto_open = false,       -- auto open when there are items
+  auto_preview = true,     -- automatically open preview when on an item
+  auto_refresh = true,     -- auto refresh when open
+  auto_jump = false,       -- auto jump to the item when there's only one
+  focus = false,           -- Focus the window when opened
+  restore = true,          -- restores the last location in the list when opening
+  follow = true,           -- Follow the current item
+  indent_guides = true,    -- show indent guides
+  max_items = 200,         -- limit number of items that can be displayed per section
+  multiline = true,        -- render multi-line messages
+  pinned = false,          -- When pinned, the opened trouble window will be bound to the current buffer
+  warn_no_results = true,  -- show a warning when there are no results
+  open_no_results = false, -- open the trouble window when there are no results
+  ---@type trouble.Window.opts
+  win = {},                -- window options for the results window. Can be a split or a floating window.
+  -- Window options for the preview window. Can be a split, floating window,
+  -- or `main` to show the preview in the main editor window.
+  ---@type trouble.Window.opts
+  preview = {
+    type = "main",
+    -- when a buffer is not yet loaded, the preview window will be created
+    -- in a scratch buffer with only syntax highlighting enabled.
+    -- Set to false, if you want the preview to always be a real loaded buffer.
+    scratch = true,
+  },
+  -- Throttle/Debounce settings. Should usually not be changed.
+  ---@type table<string, number|{ms:number, debounce?:boolean}>
+  throttle = {
+    refresh = 20,                            -- fetches new data when needed
+    update = 10,                             -- updates the window
+    render = 10,                             -- renders the window
+    follow = 100,                            -- follows the current item
+    preview = { ms = 100, debounce = true }, -- shows the preview for the current item
+  },
+  -- Key mappings can be set to the name of a builtin action,
+  -- or you can define your own custom action.
+  ---@type table<string, trouble.Action.spec|false>
+  keys = {
+    ["?"] = "help",
+    r = "refresh",
+    R = "toggle_refresh",
+    q = "close",
+    o = "jump_close",
+    ["<esc>"] = "cancel",
+    ["<cr>"] = "jump",
+    ["<2-leftmouse>"] = "jump",
+    ["<c-s>"] = "jump_split",
+    ["<c-v>"] = "jump_vsplit",
+    -- go down to next item (accepts count)
+    -- j = "next",
+    ["}"] = "next",
+    ["]]"] = "next",
+    -- go up to prev item (accepts count)
+    -- k = "prev",
+    ["{"] = "prev",
+    ["[["] = "prev",
+    dd = "delete",
+    d = { action = "delete", mode = "v" },
+    i = "inspect",
+    p = "preview",
+    P = "toggle_preview",
+    zo = "fold_open",
+    zO = "fold_open_recursive",
+    zc = "fold_close",
+    zC = "fold_close_recursive",
+    za = "fold_toggle",
+    zA = "fold_toggle_recursive",
+    zm = "fold_more",
+    zM = "fold_close_all",
+    zr = "fold_reduce",
+    zR = "fold_open_all",
+    zx = "fold_update",
+    zX = "fold_update_all",
+    zn = "fold_disable",
+    zN = "fold_enable",
+    zi = "fold_toggle_enable",
+    gb = { -- example of a custom action that toggles the active view filter
+      action = function(view)
+        view:filter({ buf = 0 }, { toggle = true })
+      end,
+      desc = "Toggle Current Buffer Filter",
+    },
+    s = { -- example of a custom action that toggles the severity
+      action = function(view)
+        local f = view:get_filter("severity")
+        local severity = ((f and f.filter.severity or 0) + 1) % 5
+        view:filter({ severity = severity }, {
+          id = "severity",
+          template = "{hl:Title}Filter:{hl} {severity}",
+          del = severity == 0,
+        })
+      end,
+      desc = "Toggle Severity Filter",
+    },
+  },
+  ---@type table<string, trouble.Mode>
+  modes = {
+    -- sources define their own modes, which you can use directly,
+    -- or override like in the example below
+    lsp_references = {
+      -- some modes are configurable, see the source code for more details
+      params = {
+        include_declaration = true,
+      },
+    },
+    -- The LSP base mode for:
+    -- * lsp_definitions, lsp_references, lsp_implementations
+    -- * lsp_type_definitions, lsp_declarations, lsp_command
+    lsp_base = {
+      params = {
+        -- don't include the current location in the results
+        include_current = false,
+      },
+    },
+    -- more advanced example that extends the lsp_document_symbols
+    symbols = {
+      desc = "document symbols",
+      mode = "lsp_document_symbols",
+      focus = false,
+      win = { position = "right" },
+      filter = {
+        -- remove Package since luals uses it for control flow structures
+        ["not"] = { ft = "lua", kind = "Package" },
+        any = {
+          -- all symbol kinds for help / markdown files
+          ft = { "help", "markdown" },
+          -- default set of symbol kinds
+          kind = {
+            "Class",
+            "Constructor",
+            "Enum",
+            "Field",
+            "Function",
+            "Interface",
+            "Method",
+            "Module",
+            "Namespace",
+            "Package",
+            "Property",
+            "Struct",
+            "Trait",
+          },
+        },
+      },
+    },
+  },
+  icons = {
+    ---@type trouble.Indent.symbols
+    indent        = {
+      top         = "│ ",
+      middle      = "├╴",
+      last        = "└╴",
+      -- last          = "-╴",
+      -- last       = "╰╴", -- rounded
+      fold_open   = " ",
+      fold_closed = " ",
+      ws          = "  ",
+    },
+    folder_closed = " ",
+    folder_open   = " ",
+    kinds         = {
+      Array         = " ",
+      Boolean       = "󰨙 ",
+      Class         = " ",
+      Constant      = "󰏿 ",
+      Constructor   = " ",
+      Enum          = " ",
+      EnumMember    = " ",
+      Event         = " ",
+      Field         = " ",
+      File          = " ",
+      Function      = "󰊕 ",
+      Interface     = " ",
+      Key           = " ",
+      Method        = "󰊕 ",
+      Module        = " ",
+      Namespace     = "󰦮 ",
+      Null          = " ",
+      Number        = "󰎠 ",
+      Object        = " ",
+      Operator      = " ",
+      Package       = " ",
+      Property      = " ",
+      String        = " ",
+      Struct        = "󰆼 ",
+      TypeParameter = " ",
+      Variable      = "󰀫 ",
+    },
+  },
+}
 
 -- colorscheme stuff
 require('base46_config')
 
 require('mappings')
-
-
