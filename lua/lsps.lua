@@ -4,7 +4,7 @@ vim.pack.add({
 
 vim.lsp.config['clangd'] = {
   cmd = {
-    'clangd21',
+    'clangd',
     '--background-index',
     '-j=32',
     '--query-driver=/usr/bin/**/clang-*,/bin/clang,/bin/clang++,/usr/bin/gcc,/usr/bin/g++',
@@ -47,7 +47,22 @@ vim.pack.add({
 
 require('java').setup()
 vim.lsp.enable('jdtls')
+vim.lsp.enable('lua_ls')
 
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('texlab')
 
+vim.pack.add({"https://github.com/scalameta/nvim-metals"})
+
+local metals = require('metals')
+local metals_config = metals.bare_config()
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {'scala', 'sbt' },
+  callback = function()
+    require('metals').initialize_or_attach({})
+  end,
+  group = nvim_metals_group,
+})
+
+vim.lsp.enable('metals')

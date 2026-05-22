@@ -855,5 +855,6 @@ require('trouble').setup {
 
 -- colorscheme stuff
 require('base46_config')
+-- require('colors.catppuccin')
 
 require('mappings')

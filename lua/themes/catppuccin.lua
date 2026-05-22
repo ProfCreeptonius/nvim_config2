@@ -27,7 +27,7 @@ M.base_30 = {
   teal = "#B5E8E0",
   orange = "#F8BD96",
   cyan = "#89DCEB",
-  statusline_bg = "#252434",
+  statusline_bg = "#232232",
   lightbg = "#2f2e3e",
   pmenu_bg = "#ABE9B3",
   folder_bg = "#89B4FA",
@@ -58,25 +58,11 @@ M.polish_hl = {
     ["@variable"] = { fg = M.base_30.lavender },
     ["@property"] = { fg = M.base_30.teal },
     ["@variable.builtin"] = { fg = M.base_30.red },
-    ["@punctuation.delimiter"] = { fg = M.base_30.light_grey },
-    ["@keyword.repeat"] = { fg = M.base_16.base0E },
-    ["@keyword.exception"] = { fg = M.base_16.base0E },
-    ["@variable.builtin"] = { fg = M.base_30.purple },
-    ["@module"] = { fg = M.base_30.lavender, italic = true },
-    ["@operator"] = { fg = M.base_30.cyan },
-    ["Include"] = { fg = M.base_30.pink },
-    ["RainbowRed"] = { fg = M.base_30.red },
-    ["RainbowViolet"] = { fg = M.base_30.purple },
-    ["RainbowYellow"] = { fg = M.base_30.yellow },
-    ["RainbowBlue"] = { fg = M.base_30.blue },
-    ["RainbowCyan"] = { fg = M.base_30.cyan },
-    ["RainbowGreen"] = { fg = M.base_30.green },
-    ["RainbowOrange"] = { fg = M.base_30.orange },
   },
 }
 
 M.type = "dark"
 
-M = require("base46").override_theme(M, "catppuccin-custom")
+M = require("base46").override_theme(M, "catppuccin")
 
 return M
