@@ -173,7 +173,7 @@ vim.api.nvim_create_user_command('TSBufDisable', function(unused)
 end, { nargs = '?' })
 
 
--- local ls = require("luasnip")
+local ls = require("luasnip")
 
 vim.keymap.set({"i"}, "<C-K>", function() ls.expand() end, {silent = true})
 vim.keymap.set({"i", "s", "n"}, "<C-l>", function() ls.jump( 1) end, {silent = true})

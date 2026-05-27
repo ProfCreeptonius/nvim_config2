@@ -66,3 +66,4 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.lsp.enable('metals')
+vim.lsp.enable('cssls')
