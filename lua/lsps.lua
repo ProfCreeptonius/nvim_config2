@@ -67,3 +67,13 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.lsp.enable('metals')
 vim.lsp.enable('cssls')
+
+vim.pack.add({"https://github.com/TheLeoP/powershell.nvim"})
+require('powershell').setup({
+  bundle_path = "~/.local/bin/PowerShellEditorServices/"
+})
+
+vim.pack.add({"https://github.com/mason-org/mason.nvim"})
+
+
+

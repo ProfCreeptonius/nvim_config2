@@ -75,6 +75,7 @@ end
 
 map('n', '<leader>mk', '<cmd>make<CR>', { desc = 'Run [M]a[k]e' })
 map('n', '<leader>q', quickfixerrors, { desc = 'Open diagnostic [Q]uickfix list' })
+map('n', '<leader>cs', function() vim.cmd 'Trouble symbols toggle' end, { desc = 'Toggle symbols' })
 
 -- Small terminal
 

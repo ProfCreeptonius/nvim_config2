@@ -59,6 +59,7 @@ M.polish_hl = {
     ["@property"] = { fg = M.base_30.teal },
     ["@variable.builtin"] = { fg = M.base_30.red },
     ["@punctuation.delimiter"] = { fg = M.base_30.light_grey },
+    ["@lsp.type.modifier"] = { fg = M.base_30.purple },
     ["@keyword.repeat"] = { fg = M.base_16.base0E },
     ["@keyword.exception"] = { fg = M.base_16.base0E },
     ["@variable.builtin"] = { fg = M.base_30.purple },
