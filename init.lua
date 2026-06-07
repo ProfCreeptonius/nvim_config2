@@ -1,19 +1,19 @@
 -- Inspired by nvim kickstart
 
-vim.cmd 'set laststatus=3'
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.cmd("set laststatus=3")
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
 
-vim.opt.mouse = 'a'
+vim.opt.mouse = "a"
 vim.opt.showmode = false
 
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+	vim.opt.clipboard = "unnamedplus"
 end)
 
 vim.opt.breakindent = true
@@ -23,8 +23,7 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = "yes"
 
 -- How long before writing swapfile
 vim.opt.updatetime = 250
@@ -37,318 +36,336 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- show substitutions live while typing
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = "split"
 
 vim.opt.cursorline = true
 
 vim.opt.scrolloff = 10
 
 -- Esc to clear highlight of search
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<C-c>', '<cmd>nohlsearch<CR>')
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+vim.keymap.set("n", "<C-c>", "<cmd>nohlsearch<CR>")
 
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- window navigation
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- highlight on yank
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
 })
 
 vim.pack.add({
-  'https://github.com/tpope/vim-sleuth',
-  'https://github.com/kylechui/nvim-surround'
+	"https://github.com/tpope/vim-sleuth",
+	"https://github.com/kylechui/nvim-surround",
+	"https://github.com/abecodes/tabout.nvim",
 })
 
-
-vim.pack.add({
-  'https://github.com/echasnovski/mini.nvim',
-})
-
-require('mini.ai').setup { n_lines = 500 }
-require('mini.move').setup()
-require('mini.colors').setup()
-
-vim.pack.add({
-  'https://github.com/nvim-lua/plenary.nvim',
-  'https://github.com/nvim-telescope/telescope-fzf-native.nvim',
-  'https://github.com/nvim-telescope/telescope.nvim'
-})
-
-require('telescope').setup {
-  extensions = {
-    ['ui-select'] = {
-      require('telescope.themes').get_dropdown(),
-    },
-  },
-
-}
-
-pcall(require('telescope').load_extension, 'fzf')
-pcall(require('telescope').load_extension, 'ui-select')
-
-
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
-  callback = function(event)
-    local map = function(keys, func, desc, mode)
-      mode = mode or 'n'
-      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-    end
-
-    map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-    map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-    map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
-    map('gtd', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype [D]efinition')
-
-    map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
-    map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
-    map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-    map('<leader>sh', vim.lsp.buf.signature_help, '[S]ignature [H]elp')
-    map('<C-s>', vim.lsp.buf.signature_help, '[S]ignature [H]elp', 'i')
-
-    map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
-
-    map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-    -- The following two autocommands are used to highlight references of the
-    -- word under your cursor when your cursor rests there for a little while.
-    --    See `:help CursorHold` for information about when this is executed
-    --
-    -- When you move your cursor, the highlights will be cleared (the second autocommand).
-    local client = vim.lsp.get_client_by_id(event.data.client_id)
-    if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-      local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        buffer = event.buf,
-        group = highlight_augroup,
-        callback = vim.lsp.buf.document_highlight,
-      })
-
-      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-        buffer = event.buf,
-        group = highlight_augroup,
-        callback = vim.lsp.buf.clear_references,
-      })
-
-      vim.api.nvim_create_autocmd('LspDetach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-        callback = function(event2)
-          vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-        end,
-      })
-    end
-
-    -- The following code creates a keymap to toggle inlay hints in your
-    -- code, if the language server you are using supports them
-    --
-    -- This may be unwanted, since they displace some of your code
-    -- changed by
-    if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-      map('<leader>lh', function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-      end, 'Toggle In[l]ay [H]ints')
-    end
-  end,
+require("tabout").setup({
+	tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
+	backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
+	act_as_tab = false, -- shift content if tab out is not possible
+	act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+	-- default_tab = '<C-t>', -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
+	-- default_shift_tab = '<C-d>', -- reverse shift default action,
+	enable_backwards = true, -- well ...
+	completion = false, -- if the tabkey is used in a completion pum
+	tabouts = {
+		{ open = "'", close = "'" },
+		{ open = '"', close = '"' },
+		{ open = "`", close = "`" },
+		-- { open = '$', close = '$' },
+		{ open = "(", close = ")" },
+		{ open = "[", close = "]" },
+		{ open = "{", close = "}" },
+		{ open = "<", close = ">" },
+	},
+	ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
+	exclude = {}, -- tabout will ignore these filetypes
 })
 
 vim.pack.add({
-  'https://github.com/stevearc/conform.nvim',
+	"https://github.com/echasnovski/mini.nvim",
 })
 
-require('conform').setup {
-  notify_on_error = false,
-  format_on_save = function(bufnr)
-    -- Disable "format_on_save lsp_fallback" for languages that don't
-    -- have a well standardized coding style. You can add additional
-    -- languages here or re-enable it for the disabled ones.
-    local disable_filetypes = { c = true, cpp = true }
-    local lsp_format_opt
-    if disable_filetypes[vim.bo[bufnr].filetype] then
-      lsp_format_opt = 'never'
-    else
-      lsp_format_opt = 'fallback'
-    end
-    return {
-      timeout_ms = 500,
-      lsp_format = lsp_format_opt,
-    }
-  end,
-  formatters_by_ft = {
-    lua = { 'stylua' },
-    -- Conform can also run multiple formatters sequentially
-    -- python = { "isort", "black" },
-    --
-    -- You can use 'stop_after_first' to run the first available formatter from the list
-    -- javascript = { "prettierd", "prettier", stop_after_first = true },
-  },
-}
+require("mini.ai").setup({ n_lines = 500 })
+require("mini.move").setup()
+require("mini.colors").setup()
 
 vim.pack.add({
-  'https://github.com/stevearc/oil.nvim',
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+	"https://github.com/nvim-telescope/telescope.nvim",
 })
 
-require('oil').setup {
-  columns = {
-    'permissions',
-    'size',
-    'mtime',
-    'icon',
-  },
-  view_options = {
-    show_hidden = true,
-  },
-  keymaps = {
-    ['g?'] = 'actions.show_help',
-    ['<CR>'] = 'actions.select',
-    ['<gv>'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
-    ['<gh>'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
-    ['<C-t>'] = { 'actions.select', opts = { tab = true }, desc = 'Open the entry in new tab' },
-    ['<C-p>'] = 'actions.preview',
-    ['<C-c>'] = 'actions.close',
-    ['<gl>'] = 'actions.refresh',
-    ['-'] = 'actions.parent',
-    ['_'] = 'actions.open_cwd',
-    ['`'] = 'actions.cd',
-    ['~'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory', mode = 'n' },
-    ['gs'] = 'actions.change_sort',
-    ['gx'] = 'actions.open_external',
-    ['g.'] = 'actions.toggle_hidden',
-    ['g\\'] = 'actions.toggle_trash',
-  },
-  use_default_keymaps = false,
-}
+require("telescope").setup({
+	extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown(),
+		},
+	},
+})
 
+pcall(require("telescope").load_extension, "fzf")
+pcall(require("telescope").load_extension, "ui-select")
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+	callback = function(event)
+		local map = function(keys, func, desc, mode)
+			mode = mode or "n"
+			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+		end
+
+		map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+
+		map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+
+		map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+
+		map("gtd", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype [D]efinition")
+
+		map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+
+		map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+
+		map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+
+		map("<leader>sh", vim.lsp.buf.signature_help, "[S]ignature [H]elp")
+		map("<C-s>", vim.lsp.buf.signature_help, "[S]ignature [H]elp", "i")
+
+		map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+
+		map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+
+		-- The following two autocommands are used to highlight references of the
+		-- word under your cursor when your cursor rests there for a little while.
+		--    See `:help CursorHold` for information about when this is executed
+		--
+		-- When you move your cursor, the highlights will be cleared (the second autocommand).
+		local client = vim.lsp.get_client_by_id(event.data.client_id)
+		if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+			local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.document_highlight,
+			})
+
+			vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.clear_references,
+			})
+
+			vim.api.nvim_create_autocmd("LspDetach", {
+				group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+				callback = function(event2)
+					vim.lsp.buf.clear_references()
+					vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+				end,
+			})
+		end
+
+		-- The following code creates a keymap to toggle inlay hints in your
+		-- code, if the language server you are using supports them
+		--
+		-- This may be unwanted, since they displace some of your code
+		-- changed by
+		if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+			map("<leader>lh", function()
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+			end, "Toggle In[l]ay [H]ints")
+		end
+	end,
+})
+
+vim.pack.add({
+	"https://github.com/stevearc/conform.nvim",
+})
+
+require("conform").setup({
+	notify_on_error = false,
+	format_on_save = function(bufnr)
+		-- Disable "format_on_save lsp_fallback" for languages that don't
+		-- have a well standardized coding style. You can add additional
+		-- languages here or re-enable it for the disabled ones.
+		local disable_filetypes = { c = true, cpp = true }
+		local lsp_format_opt
+		if disable_filetypes[vim.bo[bufnr].filetype] then
+			lsp_format_opt = "never"
+		else
+			lsp_format_opt = "fallback"
+		end
+		return {
+			timeout_ms = 500,
+			lsp_format = lsp_format_opt,
+		}
+	end,
+	formatters_by_ft = {
+		lua = { "stylua" },
+		-- Conform can also run multiple formatters sequentially
+		-- python = { "isort", "black" },
+		--
+		-- You can use 'stop_after_first' to run the first available formatter from the list
+		-- javascript = { "prettierd", "prettier", stop_after_first = true },
+	},
+})
+
+vim.pack.add({
+	"https://github.com/stevearc/oil.nvim",
+})
+
+require("oil").setup({
+	columns = {
+		"permissions",
+		"size",
+		"mtime",
+		"icon",
+	},
+	view_options = {
+		show_hidden = true,
+	},
+	keymaps = {
+		["g?"] = "actions.show_help",
+		["<CR>"] = "actions.select",
+		["<gv>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
+		["<gh>"] = { "actions.select", opts = { horizontal = true }, desc = "Open the entry in a horizontal split" },
+		["<C-t>"] = { "actions.select", opts = { tab = true }, desc = "Open the entry in new tab" },
+		["<C-p>"] = "actions.preview",
+		["<C-c>"] = "actions.close",
+		["<gl>"] = "actions.refresh",
+		["-"] = "actions.parent",
+		["_"] = "actions.open_cwd",
+		["`"] = "actions.cd",
+		["~"] = { "actions.cd", opts = { scope = "tab" }, desc = ":tcd to the current oil directory", mode = "n" },
+		["gs"] = "actions.change_sort",
+		["gx"] = "actions.open_external",
+		["g."] = "actions.toggle_hidden",
+		["g\\"] = "actions.toggle_trash",
+	},
+	use_default_keymaps = false,
+})
 
 -- Compile mode
 vim.pack.add({
-  'https://github.com/ej-shafran/compile-mode.nvim'
+	"https://github.com/ej-shafran/compile-mode.nvim",
 })
 
 vim.g.compile_mode = {
-  -- The string to show in the compile prompt as a default.
-  -- For an empty prompt, you can use:
-  -- default_command = "",
-  -- :h compile_mode.default_command
-  default_command = '',
-  -- Use `baleia` for parsing ANSI escape codes in the output.
-  -- :h compile_mode.baleia_setup
-  baleia_setup = false,
-  -- Expand commands, like `:!` (e.g. `:Compile echo %`)
-  -- :h compile_mode.bang_expansion
-  bang_expansion = false,
-  -- Configure additional error regexes.
-  -- :h compile-mode-errors
-  error_regexp_table = {},
-  -- List of filename regexes to ignore errors from.
-  -- :h compile-mode.error_ignore_file_list
-  error_ignore_file_list = {},
-  -- The minimum error level to jump to.
-  -- :h compile-mode.error_threshold
-  error_threshold = require('compile-mode').level.WARNING,
-  -- Automatically jump to the first error.
-  -- :h compile-mode.auto_jump_to_first_error
-  auto_jump_to_first_error = false,
-  -- How long to highlight an error's location when jumping to it.
-  -- :h compile-mode.error_locus_highlight
-  error_locus_highlight = 500,
-  -- Use Neovim diagnostics instead of opening the compilation buffer.
-  -- :h compile-mode.use_diagnostics
-  use_diagnostics = true,
-  -- Default to calling `:Compile` for `:Recompile`
-  -- when there's no previous command.
-  -- :h compile-mode.recompile_no_fail
-  recompile_no_fail = false,
-  -- Ask to save unsaved buffers before compiling.
-  -- :h compile-mode.ask_about_save
-  ask_about_save = true,
-  -- Ask to interrupt already running commands.
-  -- :h compile-mode.ask_to_interrupt
-  ask_to_interrupt = true,
-  -- The name for the compilation buffer.
-  -- :h compile-mode.buffer_name
-  buffer_name = '*compilation*',
-  -- The format for the time information
-  -- at the top of the compilation buffer
-  -- :h compile-mode.time_format
-  time_format = '%a %b %e %H:%M:%S',
-  -- List of regexes to hide from the output.
-  -- :h compile-mode.hidden_output
-  hidden_output = {},
-  -- A table of environment variables to pass to commands.
-  -- :h compile-mode.environment
-  environment = nil,
-  -- Clear all environment variables for each command.
-  -- :h compile-mode.clear_environment
-  clear_environment = false,
-  -- Fix compilation for plugins like `nvim-cmp`.
-  -- :h compile-mode.input_word_completion
-  input_word_completion = false,
-  -- Hide the compliation buffer.
-  -- :h compile-mode.hidden_buffer
-  hidden_buffer = false,
-  -- Automatically focus the compilation buffer.
-  -- :h compile-mode.focus_compilation_buffer
-  focus_compilation_buffer = false,
-  -- Jump back past the end/beginning of the errors
-  -- with `:NextError`/`:PrevError`
-  -- :h compile-mode.use_circular_error_navigation
-  use_circular_error_navigation = false,
-  -- Print debug information.
-  -- :h compile-mode.debug
-  debug = false,
+	-- The string to show in the compile prompt as a default.
+	-- For an empty prompt, you can use:
+	-- default_command = "",
+	-- :h compile_mode.default_command
+	default_command = "",
+	-- Use `baleia` for parsing ANSI escape codes in the output.
+	-- :h compile_mode.baleia_setup
+	baleia_setup = false,
+	-- Expand commands, like `:!` (e.g. `:Compile echo %`)
+	-- :h compile_mode.bang_expansion
+	bang_expansion = false,
+	-- Configure additional error regexes.
+	-- :h compile-mode-errors
+	error_regexp_table = {},
+	-- List of filename regexes to ignore errors from.
+	-- :h compile-mode.error_ignore_file_list
+	error_ignore_file_list = {},
+	-- The minimum error level to jump to.
+	-- :h compile-mode.error_threshold
+	error_threshold = require("compile-mode").level.WARNING,
+	-- Automatically jump to the first error.
+	-- :h compile-mode.auto_jump_to_first_error
+	auto_jump_to_first_error = false,
+	-- How long to highlight an error's location when jumping to it.
+	-- :h compile-mode.error_locus_highlight
+	error_locus_highlight = 500,
+	-- Use Neovim diagnostics instead of opening the compilation buffer.
+	-- :h compile-mode.use_diagnostics
+	use_diagnostics = true,
+	-- Default to calling `:Compile` for `:Recompile`
+	-- when there's no previous command.
+	-- :h compile-mode.recompile_no_fail
+	recompile_no_fail = false,
+	-- Ask to save unsaved buffers before compiling.
+	-- :h compile-mode.ask_about_save
+	ask_about_save = true,
+	-- Ask to interrupt already running commands.
+	-- :h compile-mode.ask_to_interrupt
+	ask_to_interrupt = true,
+	-- The name for the compilation buffer.
+	-- :h compile-mode.buffer_name
+	buffer_name = "*compilation*",
+	-- The format for the time information
+	-- at the top of the compilation buffer
+	-- :h compile-mode.time_format
+	time_format = "%a %b %e %H:%M:%S",
+	-- List of regexes to hide from the output.
+	-- :h compile-mode.hidden_output
+	hidden_output = {},
+	-- A table of environment variables to pass to commands.
+	-- :h compile-mode.environment
+	environment = nil,
+	-- Clear all environment variables for each command.
+	-- :h compile-mode.clear_environment
+	clear_environment = false,
+	-- Fix compilation for plugins like `nvim-cmp`.
+	-- :h compile-mode.input_word_completion
+	input_word_completion = false,
+	-- Hide the compliation buffer.
+	-- :h compile-mode.hidden_buffer
+	hidden_buffer = false,
+	-- Automatically focus the compilation buffer.
+	-- :h compile-mode.focus_compilation_buffer
+	focus_compilation_buffer = false,
+	-- Jump back past the end/beginning of the errors
+	-- with `:NextError`/`:PrevError`
+	-- :h compile-mode.use_circular_error_navigation
+	use_circular_error_navigation = false,
+	-- Print debug information.
+	-- :h compile-mode.debug
+	debug = false,
 }
 
 vim.pack.add({
-  'https://github.com/folke/flash.nvim'
+	"https://github.com/folke/flash.nvim",
 })
 
-require('flash').setup {
-  modes = {
-    char = {
-      enabled = false,
-    },
-  },
-  jump = {
-    -- pos = 'range',
-    -- autojump = 'true',
-    inclusive = true,
-  },
-}
-
+require("flash").setup({
+	modes = {
+		char = {
+			enabled = false,
+		},
+	},
+	jump = {
+		-- pos = 'range',
+		-- autojump = 'true',
+		inclusive = true,
+	},
+})
 
 vim.pack.add({
-  'https://github.com/nvim-treesitter/nvim-treesitter',
-  'https://github.com/hiphish/rainbow-delimiters.nvim',
+	"https://github.com/nvim-treesitter/nvim-treesitter",
+	"https://github.com/hiphish/rainbow-delimiters.nvim",
 })
 
-vim.api.nvim_create_autocmd({ 'BufWinEnter', 'CmdwinEnter' }, {
-  desc = "Enable treesitter automatically",
-  group = vim.api.nvim_create_augroup('maki-start-treesitter', { clear = true }),
-  callback = function()
-    pcall(vim.treesitter.start)
-  end
+vim.api.nvim_create_autocmd({ "BufWinEnter", "CmdwinEnter" }, {
+	desc = "Enable treesitter automatically",
+	group = vim.api.nvim_create_augroup("maki-start-treesitter", { clear = true }),
+	callback = function()
+		pcall(vim.treesitter.start)
+	end,
 })
-
 
 -- vim.pack.add({
 --   'https://github.com/saghen/blink.lib',
@@ -513,74 +530,88 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter', 'CmdwinEnter' }, {
 --
 
 vim.pack.add({
-  'https://github.com/hrsh7th/nvim-cmp',
-  'https://github.com/hrsh7th/cmp-nvim-lsp',
-  'https://github.com/hrsh7th/cmp-buffer',
-  'https://github.com/hrsh7th/cmp-path',
-  'https://github.com/hrsh7th/cmp-cmdline',
-  'https://github.com/L3MON4D3/LuaSnip'
+	"https://github.com/hrsh7th/nvim-cmp",
+	"https://github.com/hrsh7th/cmp-nvim-lsp",
+	"https://github.com/hrsh7th/cmp-buffer",
+	"https://github.com/hrsh7th/cmp-path",
+	"https://github.com/hrsh7th/cmp-cmdline",
+	"https://github.com/L3MON4D3/LuaSnip",
 })
 
-
-local cmp = require 'cmp'
+local cmp = require("cmp")
 
 vim.opt.completeopt = { "menu", "menuone", "noinsert" }
 
 cmp.setup({
-  preselect = cmp.PreselectMode.Item,
-  completion = {
-    completeopt = 'menu,menuone,noinsert'
-  },
-  snippet = {
-    -- REQUIRED - you must specify a snippet engine
-    expand = function(args)
-      -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-      -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+	preselect = cmp.PreselectMode.Item,
+	completion = {
+		completeopt = "menu,menuone,noinsert",
+	},
+	snippet = {
+		-- REQUIRED - you must specify a snippet engine
+		expand = function(args)
+			-- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+			require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+			-- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+			-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+			-- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
 
-      -- For `mini.snippets` users:
-      -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
-      -- insert({ body = args.body }) -- Insert at cursor
-      -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
-      -- require("cmp.config").set_onetime({ sources = {} })
-    end,
-  },
-  window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
-  },
-  -- completion = {
-  --   autocomplete = false,
-  -- },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-n>'] = function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-        cmp.complete()
-        vim.wait(500, function()
-          return cmp.visible()
-        end)
-        cmp.select_next_item()
-      end
-    end,
-    ['<C-j>'] = cmp.mapping.select_next_item(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    -- { name = 'vsnip' }, -- For vsnip users.
-    { name = 'luasnip' }, -- For luasnip users.
-    -- { name = 'ultisnips' }, -- For ultisnips users.
-    -- { name = 'snippy' }, -- For snippy users.
-  }, {
-    { name = 'buffer' },
-  })
+			-- For `mini.snippets` users:
+			-- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+			-- insert({ body = args.body }) -- Insert at cursor
+			-- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
+			-- require("cmp.config").set_onetime({ sources = {} })
+		end,
+	},
+	window = {
+		-- completion = cmp.config.window.bordered(),
+		-- documentation = cmp.config.window.bordered(),
+	},
+	-- completion = {
+	--   autocomplete = false,
+	-- },
+	mapping = cmp.mapping.preset.insert({
+		["<C-b>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<C-n>"] = function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			else
+				cmp.complete()
+				vim.wait(500, function()
+					return cmp.visible()
+				end)
+				cmp.select_next_item()
+			end
+		end,
+		["<C-j>"] = cmp.mapping.select_next_item(),
+		["<C-e>"] = cmp.mapping.abort(),
+		["<C-y>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+
+		["<A-y>"] = function()
+			require("minuet").make_cmp_map()
+			cmp.complete({
+				config = {
+					sources = {
+						name = "minuet",
+					},
+				},
+			})
+		end,
+	}),
+	sources = cmp.config.sources({
+		{ name = "nvim_lsp" },
+		-- { name = 'vsnip' }, -- For vsnip users.
+		{ name = "luasnip" }, -- For luasnip users.
+		-- { name = 'ultisnips' }, -- For ultisnips users.
+		-- { name = 'snippy' }, -- For snippy users.
+	}, {
+		{ name = "minuet" },
+		{ name = "buffer" },
+	}),
+	performance = {
+		fetching_timeout = 2000,
+	},
 })
 
 -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
@@ -592,269 +623,270 @@ cmp.setup({
     { name = 'buffer' },
   })
 })
-require("cmp_git").setup() ]] --
+require("cmp_git").setup() ]]
+--
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
+cmp.setup.cmdline({ "/", "?" }, {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = {
+		{ name = "buffer" },
+	},
 })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  }),
-  matching = { disallow_symbol_nonprefix_matching = false }
+cmp.setup.cmdline(":", {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources({
+		{ name = "path" },
+	}, {
+		{ name = "cmdline" },
+	}),
+	matching = { disallow_symbol_nonprefix_matching = false },
 })
 
 -- vim.cmd "set completeopt=menuone,noselect,fuzzy,nosort"
 -- vim.cmd "set completeopt=menuone,fuzzy,noinsert"
 
-
-require('lsps')
-require('themes')
+require("lsps")
+require("themes")
 
 vim.pack.add({ -- Add indentation guides even on blank lines
-  'https://github.com/lukas-reineke/indent-blankline.nvim',
+	"https://github.com/lukas-reineke/indent-blankline.nvim",
 })
 
 local highlight = {
-  'RainbowYellow',
-  'RainbowViolet',
-  'RainbowBlue',
-  'RainbowOrange',
-  'RainbowGreen',
-  'RainbowCyan',
+	"RainbowYellow",
+	"RainbowViolet",
+	"RainbowBlue",
+	"RainbowOrange",
+	"RainbowGreen",
+	"RainbowCyan",
 }
-local hooks = require 'ibl.hooks'
+local hooks = require("ibl.hooks")
 -- create the highlight groups in the highlight setup hook, so they are reset
 -- every time the colorscheme changes
 
-vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
-vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
-vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
-vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
-vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
-vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
-vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
+vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
 
 vim.g.rainbow_delimiters = { highlight = highlight }
-require('ibl').setup { scope = { highlight = highlight } }
+require("ibl").setup({ scope = { highlight = highlight } })
 
 hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
 
 vim.pack.add({
-  'https://github.com/lervag/vimtex'
+	"https://github.com/lervag/vimtex",
 })
 
 vim.g.vimtex_view_method = "zathura"
 
 vim.pack.add({
-  'https://github.com/jake-stewart/multicursor.nvim',
-  'https://github.com/folke/trouble.nvim',
+	"https://github.com/jake-stewart/multicursor.nvim",
+	"https://github.com/folke/trouble.nvim",
 })
 
-require('trouble').setup {
-  auto_close = false,      -- auto close when there are no items
-  auto_open = false,       -- auto open when there are items
-  auto_preview = true,     -- automatically open preview when on an item
-  auto_refresh = true,     -- auto refresh when open
-  auto_jump = false,       -- auto jump to the item when there's only one
-  focus = false,           -- Focus the window when opened
-  restore = true,          -- restores the last location in the list when opening
-  follow = true,           -- Follow the current item
-  indent_guides = true,    -- show indent guides
-  max_items = 200,         -- limit number of items that can be displayed per section
-  multiline = true,        -- render multi-line messages
-  pinned = false,          -- When pinned, the opened trouble window will be bound to the current buffer
-  warn_no_results = true,  -- show a warning when there are no results
-  open_no_results = false, -- open the trouble window when there are no results
-  ---@type trouble.Window.opts
-  win = {},                -- window options for the results window. Can be a split or a floating window.
-  -- Window options for the preview window. Can be a split, floating window,
-  -- or `main` to show the preview in the main editor window.
-  ---@type trouble.Window.opts
-  preview = {
-    type = "main",
-    -- when a buffer is not yet loaded, the preview window will be created
-    -- in a scratch buffer with only syntax highlighting enabled.
-    -- Set to false, if you want the preview to always be a real loaded buffer.
-    scratch = true,
-  },
-  -- Throttle/Debounce settings. Should usually not be changed.
-  ---@type table<string, number|{ms:number, debounce?:boolean}>
-  throttle = {
-    refresh = 20,                            -- fetches new data when needed
-    update = 10,                             -- updates the window
-    render = 10,                             -- renders the window
-    follow = 100,                            -- follows the current item
-    preview = { ms = 100, debounce = true }, -- shows the preview for the current item
-  },
-  -- Key mappings can be set to the name of a builtin action,
-  -- or you can define your own custom action.
-  ---@type table<string, trouble.Action.spec|false>
-  keys = {
-    ["?"] = "help",
-    r = "refresh",
-    R = "toggle_refresh",
-    q = "close",
-    o = "jump_close",
-    ["<esc>"] = "cancel",
-    ["<cr>"] = "jump",
-    ["<2-leftmouse>"] = "jump",
-    ["<c-s>"] = "jump_split",
-    ["<c-v>"] = "jump_vsplit",
-    -- go down to next item (accepts count)
-    -- j = "next",
-    ["}"] = "next",
-    ["]]"] = "next",
-    -- go up to prev item (accepts count)
-    -- k = "prev",
-    ["{"] = "prev",
-    ["[["] = "prev",
-    dd = "delete",
-    d = { action = "delete", mode = "v" },
-    i = "inspect",
-    p = "preview",
-    P = "toggle_preview",
-    zo = "fold_open",
-    zO = "fold_open_recursive",
-    zc = "fold_close",
-    zC = "fold_close_recursive",
-    za = "fold_toggle",
-    zA = "fold_toggle_recursive",
-    zm = "fold_more",
-    zM = "fold_close_all",
-    zr = "fold_reduce",
-    zR = "fold_open_all",
-    zx = "fold_update",
-    zX = "fold_update_all",
-    zn = "fold_disable",
-    zN = "fold_enable",
-    zi = "fold_toggle_enable",
-    gb = { -- example of a custom action that toggles the active view filter
-      action = function(view)
-        view:filter({ buf = 0 }, { toggle = true })
-      end,
-      desc = "Toggle Current Buffer Filter",
-    },
-    s = { -- example of a custom action that toggles the severity
-      action = function(view)
-        local f = view:get_filter("severity")
-        local severity = ((f and f.filter.severity or 0) + 1) % 5
-        view:filter({ severity = severity }, {
-          id = "severity",
-          template = "{hl:Title}Filter:{hl} {severity}",
-          del = severity == 0,
-        })
-      end,
-      desc = "Toggle Severity Filter",
-    },
-  },
-  ---@type table<string, trouble.Mode>
-  modes = {
-    -- sources define their own modes, which you can use directly,
-    -- or override like in the example below
-    lsp_references = {
-      -- some modes are configurable, see the source code for more details
-      params = {
-        include_declaration = true,
-      },
-    },
-    -- The LSP base mode for:
-    -- * lsp_definitions, lsp_references, lsp_implementations
-    -- * lsp_type_definitions, lsp_declarations, lsp_command
-    lsp_base = {
-      params = {
-        -- don't include the current location in the results
-        include_current = false,
-      },
-    },
-    -- more advanced example that extends the lsp_document_symbols
-    symbols = {
-      desc = "document symbols",
-      mode = "lsp_document_symbols",
-      focus = false,
-      win = { position = "right" },
-      filter = {
-        -- remove Package since luals uses it for control flow structures
-        ["not"] = { ft = "lua", kind = "Package" },
-        any = {
-          -- all symbol kinds for help / markdown files
-          ft = { "help", "markdown" },
-          -- default set of symbol kinds
-          kind = {
-            "Class",
-            "Constructor",
-            "Enum",
-            "Field",
-            "Function",
-            "Interface",
-            "Method",
-            "Module",
-            "Namespace",
-            "Package",
-            "Property",
-            "Struct",
-            "Trait",
-          },
-        },
-      },
-    },
-  },
-  icons = {
-    ---@type trouble.Indent.symbols
-    indent        = {
-      top         = "│ ",
-      middle      = "├╴",
-      last        = "└╴",
-      -- last          = "-╴",
-      -- last       = "╰╴", -- rounded
-      fold_open   = " ",
-      fold_closed = " ",
-      ws          = "  ",
-    },
-    folder_closed = " ",
-    folder_open   = " ",
-    kinds         = {
-      Array         = " ",
-      Boolean       = "󰨙 ",
-      Class         = " ",
-      Constant      = "󰏿 ",
-      Constructor   = " ",
-      Enum          = " ",
-      EnumMember    = " ",
-      Event         = " ",
-      Field         = " ",
-      File          = " ",
-      Function      = "󰊕 ",
-      Interface     = " ",
-      Key           = " ",
-      Method        = "󰊕 ",
-      Module        = " ",
-      Namespace     = "󰦮 ",
-      Null          = " ",
-      Number        = "󰎠 ",
-      Object        = " ",
-      Operator      = " ",
-      Package       = " ",
-      Property      = " ",
-      String        = " ",
-      Struct        = "󰆼 ",
-      TypeParameter = " ",
-      Variable      = "󰀫 ",
-    },
-  },
-}
+require("trouble").setup({
+	auto_close = false, -- auto close when there are no items
+	auto_open = false, -- auto open when there are items
+	auto_preview = true, -- automatically open preview when on an item
+	auto_refresh = true, -- auto refresh when open
+	auto_jump = false, -- auto jump to the item when there's only one
+	focus = false, -- Focus the window when opened
+	restore = true, -- restores the last location in the list when opening
+	follow = true, -- Follow the current item
+	indent_guides = true, -- show indent guides
+	max_items = 200, -- limit number of items that can be displayed per section
+	multiline = true, -- render multi-line messages
+	pinned = false, -- When pinned, the opened trouble window will be bound to the current buffer
+	warn_no_results = true, -- show a warning when there are no results
+	open_no_results = false, -- open the trouble window when there are no results
+	---@type trouble.Window.opts
+	win = {}, -- window options for the results window. Can be a split or a floating window.
+	-- Window options for the preview window. Can be a split, floating window,
+	-- or `main` to show the preview in the main editor window.
+	---@type trouble.Window.opts
+	preview = {
+		type = "main",
+		-- when a buffer is not yet loaded, the preview window will be created
+		-- in a scratch buffer with only syntax highlighting enabled.
+		-- Set to false, if you want the preview to always be a real loaded buffer.
+		scratch = true,
+	},
+	-- Throttle/Debounce settings. Should usually not be changed.
+	---@type table<string, number|{ms:number, debounce?:boolean}>
+	throttle = {
+		refresh = 20, -- fetches new data when needed
+		update = 10, -- updates the window
+		render = 10, -- renders the window
+		follow = 100, -- follows the current item
+		preview = { ms = 100, debounce = true }, -- shows the preview for the current item
+	},
+	-- Key mappings can be set to the name of a builtin action,
+	-- or you can define your own custom action.
+	---@type table<string, trouble.Action.spec|false>
+	keys = {
+		["?"] = "help",
+		r = "refresh",
+		R = "toggle_refresh",
+		q = "close",
+		o = "jump_close",
+		["<esc>"] = "cancel",
+		["<cr>"] = "jump",
+		["<2-leftmouse>"] = "jump",
+		["<c-s>"] = "jump_split",
+		["<c-v>"] = "jump_vsplit",
+		-- go down to next item (accepts count)
+		-- j = "next",
+		["}"] = "next",
+		["]]"] = "next",
+		-- go up to prev item (accepts count)
+		-- k = "prev",
+		["{"] = "prev",
+		["[["] = "prev",
+		dd = "delete",
+		d = { action = "delete", mode = "v" },
+		i = "inspect",
+		p = "preview",
+		P = "toggle_preview",
+		zo = "fold_open",
+		zO = "fold_open_recursive",
+		zc = "fold_close",
+		zC = "fold_close_recursive",
+		za = "fold_toggle",
+		zA = "fold_toggle_recursive",
+		zm = "fold_more",
+		zM = "fold_close_all",
+		zr = "fold_reduce",
+		zR = "fold_open_all",
+		zx = "fold_update",
+		zX = "fold_update_all",
+		zn = "fold_disable",
+		zN = "fold_enable",
+		zi = "fold_toggle_enable",
+		gb = { -- example of a custom action that toggles the active view filter
+			action = function(view)
+				view:filter({ buf = 0 }, { toggle = true })
+			end,
+			desc = "Toggle Current Buffer Filter",
+		},
+		s = { -- example of a custom action that toggles the severity
+			action = function(view)
+				local f = view:get_filter("severity")
+				local severity = ((f and f.filter.severity or 0) + 1) % 5
+				view:filter({ severity = severity }, {
+					id = "severity",
+					template = "{hl:Title}Filter:{hl} {severity}",
+					del = severity == 0,
+				})
+			end,
+			desc = "Toggle Severity Filter",
+		},
+	},
+	---@type table<string, trouble.Mode>
+	modes = {
+		-- sources define their own modes, which you can use directly,
+		-- or override like in the example below
+		lsp_references = {
+			-- some modes are configurable, see the source code for more details
+			params = {
+				include_declaration = true,
+			},
+		},
+		-- The LSP base mode for:
+		-- * lsp_definitions, lsp_references, lsp_implementations
+		-- * lsp_type_definitions, lsp_declarations, lsp_command
+		lsp_base = {
+			params = {
+				-- don't include the current location in the results
+				include_current = false,
+			},
+		},
+		-- more advanced example that extends the lsp_document_symbols
+		symbols = {
+			desc = "document symbols",
+			mode = "lsp_document_symbols",
+			focus = false,
+			win = { position = "right" },
+			filter = {
+				-- remove Package since luals uses it for control flow structures
+				["not"] = { ft = "lua", kind = "Package" },
+				any = {
+					-- all symbol kinds for help / markdown files
+					ft = { "help", "markdown" },
+					-- default set of symbol kinds
+					kind = {
+						"Class",
+						"Constructor",
+						"Enum",
+						"Field",
+						"Function",
+						"Interface",
+						"Method",
+						"Module",
+						"Namespace",
+						"Package",
+						"Property",
+						"Struct",
+						"Trait",
+					},
+				},
+			},
+		},
+	},
+	icons = {
+		---@type trouble.Indent.symbols
+		indent = {
+			top = "│ ",
+			middle = "├╴",
+			last = "└╴",
+			-- last          = "-╴",
+			-- last       = "╰╴", -- rounded
+			fold_open = " ",
+			fold_closed = " ",
+			ws = "  ",
+		},
+		folder_closed = " ",
+		folder_open = " ",
+		kinds = {
+			Array = " ",
+			Boolean = "󰨙 ",
+			Class = " ",
+			Constant = "󰏿 ",
+			Constructor = " ",
+			Enum = " ",
+			EnumMember = " ",
+			Event = " ",
+			Field = " ",
+			File = " ",
+			Function = "󰊕 ",
+			Interface = " ",
+			Key = " ",
+			Method = "󰊕 ",
+			Module = " ",
+			Namespace = "󰦮 ",
+			Null = " ",
+			Number = "󰎠 ",
+			Object = " ",
+			Operator = " ",
+			Package = " ",
+			Property = " ",
+			String = " ",
+			Struct = "󰆼 ",
+			TypeParameter = " ",
+			Variable = "󰀫 ",
+		},
+	},
+})
 
 -- colorscheme stuff
-require('base46_config')
+require("base46_config")
 -- require('colors.catppuccin')
 
-require('mappings')
+require("ai")
+require("mappings")
