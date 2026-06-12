@@ -2,9 +2,15 @@ vim.pack.add({
 	"https://github.com/neovim/nvim-lspconfig",
 })
 
+
+
+local clangd_exe = "clangd"
+if vim.loop.os_uname().sysname == "FreeBSD" then clangd_exe = "clangd22" end
+
+
 vim.lsp.config["clangd"] = {
 	cmd = {
-		"clangd",
+		clangd_exe,
 		"--background-index",
 		"-j=32",
 		"--query-driver=/usr/bin/**/clang-*,/bin/clang,/bin/clang++,/usr/bin/gcc,/usr/bin/g++",
@@ -124,8 +130,8 @@ require("kotlin").setup({
 	-- Optional: Configure inlay hints (requires kotlin-lsp v261+)
 	-- All settings default to true, set to false to disable specific hints
 	inlay_hints = {
-		enabled = true, -- Enable inlay hints (auto-enable on LSP attach)
-		parameters = true, -- Show parameter names
+		enabled = true,       -- Enable inlay hints (auto-enable on LSP attach)
+		parameters = true,    -- Show parameter names
 		parameters_compiled = true, -- Show compiled parameter names
 		parameters_excluded = false, -- Show excluded parameter names
 		types_property = true, -- Show property types
@@ -134,8 +140,8 @@ require("kotlin").setup({
 		function_parameter = true, -- Show function parameter types
 		lambda_return = true, -- Show lambda return types
 		lambda_receivers_parameters = true, -- Show lambda receivers/parameters
-		value_ranges = true, -- Show value ranges
-		kotlin_time = true, -- Show kotlin.time warnings
+		value_ranges = true,  -- Show value ranges
+		kotlin_time = true,   -- Show kotlin.time warnings
 	},
 
 	-- Optional: LSP-driven folding (requires kotlin-lsp v262.4739.0+)

@@ -73,9 +73,9 @@ vim.pack.add({
 })
 
 require("tabout").setup({
-	tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
+	tabkey = "<Tab>",      -- key to trigger tabout, set to an empty string to disable
 	backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
-	act_as_tab = false, -- shift content if tab out is not possible
+	act_as_tab = false,    -- shift content if tab out is not possible
 	act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
 	-- default_tab = '<C-t>', -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
 	-- default_shift_tab = '<C-d>', -- reverse shift default action,
@@ -156,7 +156,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- When you move your cursor, the highlights will be cleared (the second autocommand).
 		local client = vim.lsp.get_client_by_id(event.data.client_id)
 		if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-			local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+			local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight",
+				{ clear = false })
 			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 				buffer = event.buf,
 				group = highlight_augroup,
@@ -173,7 +174,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
 				callback = function(event2)
 					vim.lsp.buf.clear_references()
-					vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+					vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2
+					.buf })
 				end,
 			})
 		end
@@ -602,7 +604,7 @@ cmp.setup({
 	}),
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp_signature_help" },
-		{ name = "minuet" },
+		-- { name = "minuet" },
 		{ name = "nvim_lsp" },
 		-- { name = 'vsnip' }, -- For vsnip users.
 		{ name = "luasnip" }, -- For luasnip users.
@@ -699,17 +701,17 @@ require("trouble").setup({
 	auto_preview = true, -- automatically open preview when on an item
 	auto_refresh = true, -- auto refresh when open
 	auto_jump = false, -- auto jump to the item when there's only one
-	focus = false, -- Focus the window when opened
-	restore = true, -- restores the last location in the list when opening
-	follow = true, -- Follow the current item
+	focus = false,    -- Focus the window when opened
+	restore = true,   -- restores the last location in the list when opening
+	follow = true,    -- Follow the current item
 	indent_guides = true, -- show indent guides
-	max_items = 200, -- limit number of items that can be displayed per section
+	max_items = 200,  -- limit number of items that can be displayed per section
 	multiline = true, -- render multi-line messages
-	pinned = false, -- When pinned, the opened trouble window will be bound to the current buffer
+	pinned = false,   -- When pinned, the opened trouble window will be bound to the current buffer
 	warn_no_results = true, -- show a warning when there are no results
 	open_no_results = false, -- open the trouble window when there are no results
 	---@type trouble.Window.opts
-	win = {}, -- window options for the results window. Can be a split or a floating window.
+	win = {},         -- window options for the results window. Can be a split or a floating window.
 	-- Window options for the preview window. Can be a split, floating window,
 	-- or `main` to show the preview in the main editor window.
 	---@type trouble.Window.opts
@@ -723,10 +725,10 @@ require("trouble").setup({
 	-- Throttle/Debounce settings. Should usually not be changed.
 	---@type table<string, number|{ms:number, debounce?:boolean}>
 	throttle = {
-		refresh = 20, -- fetches new data when needed
-		update = 10, -- updates the window
-		render = 10, -- renders the window
-		follow = 100, -- follows the current item
+		refresh = 20,              -- fetches new data when needed
+		update = 10,               -- updates the window
+		render = 10,               -- renders the window
+		follow = 100,              -- follows the current item
 		preview = { ms = 100, debounce = true }, -- shows the preview for the current item
 	},
 	-- Key mappings can be set to the name of a builtin action,
