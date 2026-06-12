@@ -57,7 +57,6 @@ M.polish_hl = {
 	treesitter = {
 		["@variable"] = { fg = M.base_30.lavender },
 		["@property"] = { fg = M.base_30.teal },
-		["@variable.builtin"] = { fg = M.base_30.red },
 		["@punctuation.delimiter"] = { fg = M.base_30.light_grey },
 		["@lsp.type.modifier"] = { fg = M.base_30.purple },
 		["@lsp.type.concept"] = { fg = M.base_30.orange },

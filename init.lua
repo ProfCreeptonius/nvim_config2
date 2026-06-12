@@ -535,6 +535,7 @@ vim.pack.add({
 	"https://github.com/hrsh7th/cmp-buffer",
 	"https://github.com/hrsh7th/cmp-path",
 	"https://github.com/hrsh7th/cmp-cmdline",
+	"https://github.com/hrsh7th/cmp-nvim-lsp-signature-help",
 	"https://github.com/L3MON4D3/LuaSnip",
 })
 
@@ -578,9 +579,9 @@ cmp.setup({
 				cmp.select_next_item()
 			else
 				cmp.complete()
-				vim.wait(500, function()
-					return cmp.visible()
-				end)
+				-- vim.wait(100, function()
+				-- 	return cmp.visible()
+				-- end)
 				cmp.select_next_item()
 			end
 		end,
@@ -600,17 +601,18 @@ cmp.setup({
 		end,
 	}),
 	sources = cmp.config.sources({
+		{ name = "nvim_lsp_signature_help" },
+		{ name = "minuet" },
 		{ name = "nvim_lsp" },
 		-- { name = 'vsnip' }, -- For vsnip users.
 		{ name = "luasnip" }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
 		-- { name = 'snippy' }, -- For snippy users.
 	}, {
-		{ name = "minuet" },
 		{ name = "buffer" },
 	}),
 	performance = {
-		fetching_timeout = 2000,
+		fetching_timeout = 1000,
 	},
 })
 
@@ -885,8 +887,9 @@ require("trouble").setup({
 })
 
 -- colorscheme stuff
-require("base46_config")
--- require('colors.catppuccin')
+-- require("base46_config")
+require("colors.catppuccin-exported")
 
 require("ai")
 require("mappings")
+require("lualine_config")
